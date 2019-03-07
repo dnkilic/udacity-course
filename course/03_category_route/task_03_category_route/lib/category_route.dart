@@ -3,10 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-
-// TODO: Check if we need to import anything
-
-// TODO: Define any constants
+import 'package:task_03_category_route/category.dart';
 
 /// Category Route (screen).
 ///
@@ -15,6 +12,12 @@ import 'package:flutter/material.dart';
 ///
 /// While it is named CategoryRoute, a more apt name would be CategoryScreen,
 /// because it is responsible for the UI at the route's destination.
+///
+
+final _appBarTitle = "Unit Converter";
+final _appBarTitleSize = 30.0;
+final _appBarElevation = 0.0;
+
 class CategoryRoute extends StatelessWidget {
   const CategoryRoute();
 
@@ -40,17 +43,40 @@ class CategoryRoute extends StatelessWidget {
     Colors.red,
   ];
 
+  static final _size = _categoryNames.length;
+
   @override
   Widget build(BuildContext context) {
-    // TODO: Create a list of the eight Categories, using the names and colors
     // from above. Use a placeholder icon, such as `Icons.cake` for each
     // Category. We'll add custom icons later.
 
-    // TODO: Create a list view of the Categories
-    final listView = Container();
+    List<Category> items = List<Category>.generate(
+        _categoryNames.length,
+        (i) => Category(
+            name: _categoryNames[i],
+            color: _baseColors[i],
+            iconLocation: Icons.cake));
 
-    // TODO: Create an App Bar
-    final appBar = AppBar();
+    final listView = Container(
+      color: Colors.green[100],
+      child: ListView.builder(
+          itemCount: _size,
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return item;
+          }),
+    );
+
+    final appBar = AppBar(
+      title: Title(
+        color: Colors.black,
+        child: Center(child: Text(_appBarTitle)),
+      ),
+      textTheme: TextTheme(
+          title: TextStyle(fontSize: _appBarTitleSize, color: Colors.black)),
+      elevation: _appBarElevation,
+      backgroundColor: Colors.green[100],
+    );
 
     return Scaffold(
       appBar: appBar,

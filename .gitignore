@@ -7,8 +7,6 @@
 .pub/
 .settings/
 build/
-packages
-.packages
 ios/.generated/
 pubspec.lock
 .flutter-plugins
@@ -19,3 +17,4 @@ gradle-wrapper.properties
 gradlew
 gradlew.bat
 gradle-wrapper.jar
+android/app/src/main/gen/
