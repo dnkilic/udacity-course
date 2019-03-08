@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'unit.dart';
 
 const _padding = EdgeInsets.all(16.0);
+const _iconSize = 40.0;
 
 /// [ConverterRoute] where users can input amounts to convert in one [Unit]
 /// and retrieve the conversion in another [Unit] for a specific [Category].
@@ -38,12 +39,8 @@ class ConverterRoute extends StatefulWidget {
 }
 
 class _ConverterRouteState extends State<ConverterRoute> {
-  // TODO: Set some variables, such as for keeping track of the user's input
-  // value and units
-
-  // TODO: Determine whether you need to override anything, such as initState()
-
-  // TODO: Add other helper functions. We've given you one, _format()
+  String value;
+  String units;
 
   /// Clean up conversion; trim trailing zeros, e.g. 5.500 -> 5.5, 10.0 -> 10
   String _format(double conversion) {
@@ -63,39 +60,60 @@ class _ConverterRouteState extends State<ConverterRoute> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Create the 'input' group of widgets. This is a Column that
-    // includes the input value, and 'from' unit [Dropdown].
-
-    // TODO: Create a compare arrows icon.
-
-    // TODO: Create the 'output' group of widgets. This is a Column that
-    // includes the output value, and 'to' unit [Dropdown].
-
-    // TODO: Return the input, arrows, and output widgets, wrapped in a Column.
-
-    // TODO: Delete the below placeholder code.
     final unitWidgets = widget.units.map((Unit unit) {
-      return Container(
-        color: widget.color,
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            Text(
-              unit.name,
-              style: Theme.of(context).textTheme.headline,
-            ),
-            Text(
-              'Conversion: ${unit.conversion}',
-              style: Theme.of(context).textTheme.subhead,
-            ),
-          ],
+      return DropdownMenuItem(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Text(
+                unit.name,
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ],
+          ),
         ),
       );
     }).toList();
 
-    return ListView(
-      children: unitWidgets,
+    Widget input = Padding(
+      padding: _padding,
+      child: Column(children: <Widget>[
+        TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Input",
+              errorStyle: TextStyle(color: Colors.red)),
+        ),
+        DropdownButtonFormField(
+          items: unitWidgets,
+          onChanged: (value) {},
+        )
+      ]),
+    );
+
+    Icon icon = Icon(Icons.compare_arrows, size: _iconSize);
+
+    Widget output = Padding(
+      padding: _padding,
+      child: Column(children: <Widget>[
+        TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Output",
+              errorStyle: TextStyle(color: Colors.red)),
+        ),
+        DropdownButtonFormField(
+          items: unitWidgets,
+          onChanged: (value) {},
+        )
+      ]),
+    );
+    return Padding(
+      padding: _padding,
+      child: Column(children: <Widget>[input, icon, output]),
     );
   }
 }

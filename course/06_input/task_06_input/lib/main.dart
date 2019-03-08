@@ -15,6 +15,10 @@ void main() {
   runApp(UnitConverterApp());
 }
 
+Color textBodyColor = Colors.black;
+Color textDisplayColor = Colors.grey[600];
+Color primaryColor = Colors.grey[500];
+
 /// This widget is the root of our application.
 ///
 /// The first screen we see is a list [Categories], each of which
@@ -25,7 +29,12 @@ class UnitConverterApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Unit Converter',
-      // TODO: Fill out the theme parameter
+      theme: ThemeData(
+          textTheme: TextTheme(
+              body1: TextStyle(color: textBodyColor),
+              body2: TextStyle(color: textBodyColor),
+              display1: TextStyle(color: textDisplayColor)),
+          primaryColor: primaryColor),
       home: CategoryRoute(),
     );
   }
