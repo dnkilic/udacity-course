@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:task_07_backdrop/backdrop.dart';
+import 'package:task_07_backdrop/unit_converter.dart';
 
 import 'category.dart';
 import 'category_tile.dart';
@@ -25,7 +27,10 @@ class CategoryRoute extends StatefulWidget {
 }
 
 class _CategoryRouteState extends State<CategoryRoute> {
-  // TODO: Keep track of a default [Category], and the currently-selected
+
+  Category currentSelectedCategory;
+  Widget currentUnitConverter;
+
   // [Category]
   final _categories = <Category>[];
   static const _categoryNames = <String>[
@@ -77,7 +82,6 @@ class _CategoryRouteState extends State<CategoryRoute> {
   @override
   void initState() {
     super.initState();
-    // TODO: Set the default [Category] for the unit converter that opens
     for (var i = 0; i < _categoryNames.length; i++) {
       _categories.add(Category(
         name: _categoryNames[i],
@@ -86,11 +90,25 @@ class _CategoryRouteState extends State<CategoryRoute> {
         units: _retrieveUnitList(_categoryNames[i]),
       ));
     }
+
+    currentSelectedCategory = _categories[0];
+    currentUnitConverter = _buildUnitConverter(currentSelectedCategory);
   }
 
-  // TODO: Fill out this function
   /// Function to call when a [Category] is tapped.
-  void _onCategoryTap(Category category) {}
+  void _onCategoryTap(Category category) {
+    setState(() {
+      currentSelectedCategory = category;
+      currentUnitConverter = _buildUnitConverter(category);
+    });
+
+    print("deneme");
+
+  }
+
+  Widget _buildUnitConverter(Category category) {
+    return UnitConverter(category: category);
+  }
 
   /// Makes the correct number of rows for the list view.
   ///
@@ -107,6 +125,8 @@ class _CategoryRouteState extends State<CategoryRoute> {
     );
   }
 
+
+
   /// Returns a list of mock [Unit]s.
   List<Unit> _retrieveUnitList(String categoryName) {
     return List.generate(10, (int i) {
@@ -120,29 +140,33 @@ class _CategoryRouteState extends State<CategoryRoute> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Import and use the Backdrop widget
     final listView = Container(
-      color: _backgroundColor,
+      color: currentSelectedCategory.color,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       child: _buildCategoryWidgets(),
     );
 
-    final appBar = AppBar(
-      elevation: 0.0,
-      title: Text(
+    return Backdrop(currentCategory: currentSelectedCategory,
+      backPanel: Padding(
+        padding: const EdgeInsets.only(bottom: 48.0),
+        child: listView,
+      ),
+      frontPanel: currentUnitConverter,
+      backTitle: Text(
+        'Select Category',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 30.0,
+        ),
+      ),
+      frontTitle: Text(
         'Unit Converter',
         style: TextStyle(
           color: Colors.black,
           fontSize: 30.0,
         ),
       ),
-      centerTitle: true,
-      backgroundColor: _backgroundColor,
-    );
 
-    return Scaffold(
-      appBar: appBar,
-      body: listView,
     );
   }
 }
