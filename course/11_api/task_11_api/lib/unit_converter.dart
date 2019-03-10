@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// TODO: Import necessary packages
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import 'api.dart';
 import 'category.dart';
 import 'unit.dart';
 
@@ -101,13 +101,24 @@ class _UnitConverterState extends State<UnitConverter> {
     return outputNum;
   }
 
-  // TODO: If in the Currency [Category], call the API to retrieve the conversion.
-  // Remember, the API call is an async function.
-  void _updateConversion() {
-    setState(() {
-      _convertedValue =
-          _format(_inputValue * (_toValue.conversion / _fromValue.conversion));
-    });
+  Future<void> _updateConversion() async {
+    // Our API has a handy convert function, so we can use that for
+    // the Currency [Category]
+    if (widget.category.name == apiCategory['name']) {
+      final api = Api();
+      final conversion = await api.convert(apiCategory['route'],
+          _inputValue.toString(), _fromValue.name, _toValue.name);
+
+      setState(() {
+        _convertedValue = _format(conversion);
+      });
+    } else {
+      // For the static units, we do the conversion ourselves
+      setState(() {
+        _convertedValue = _format(
+            _inputValue * (_toValue.conversion / _fromValue.conversion));
+      });
+    }
   }
 
   void _updateInputValue(String input) {
@@ -132,7 +143,7 @@ class _UnitConverterState extends State<UnitConverter> {
 
   Unit _getUnit(String unitName) {
     return widget.category.units.firstWhere(
-      (Unit unit) {
+          (Unit unit) {
         return unit.name == unitName;
       },
       orElse: null,
@@ -172,8 +183,8 @@ class _UnitConverterState extends State<UnitConverter> {
       child: Theme(
         // This sets the color of the [DropdownMenuItem]
         data: Theme.of(context).copyWith(
-              canvasColor: Colors.grey[50],
-            ),
+          canvasColor: Colors.grey[50],
+        ),
         child: DropdownButtonHideUnderline(
           child: ButtonTheme(
             alignedDropdown: true,

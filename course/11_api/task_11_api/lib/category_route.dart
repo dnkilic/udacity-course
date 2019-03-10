@@ -7,7 +7,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-// TODO: Import necessary package
+import 'api.dart';
 import 'backdrop.dart';
 import 'category.dart';
 import 'category_tile.dart';
@@ -92,7 +92,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
     // We only want to load our data in once
     if (_categories.isEmpty) {
       await _retrieveLocalCategories();
-      // TODO: Call _retrieveApiCategory() here
+      await _retrieveApiCategory();
     }
   }
 
@@ -110,7 +110,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
     var categoryIndex = 0;
     data.keys.forEach((key) {
       final List<Unit> units =
-          data[key].map<Unit>((dynamic data) => Unit.fromJson(data)).toList();
+      data[key].map<Unit>((dynamic data) => Unit.fromJson(data)).toList();
 
       var category = Category(
         name: key,
@@ -128,9 +128,37 @@ class _CategoryRouteState extends State<CategoryRoute> {
     });
   }
 
-  // TODO: Add the Currency Category retrieved from the API, to our _categories
   /// Retrieves a [Category] and its [Unit]s from an API on the web
-  Future<void> _retrieveApiCategory() async {}
+  Future<void> _retrieveApiCategory() async {
+    // Add a placeholder while we fetch the Currency category using the API
+    setState(() {
+      _categories.add(Category(
+        name: apiCategory['name'],
+        units: [],
+        color: _baseColors.last,
+        iconLocation: _icons.last,
+      ));
+    });
+    final api = Api();
+    final jsonUnits = await api.getUnits(apiCategory['route']);
+    // If the API errors out or we have no internet connection, this category
+    // remains in placeholder mode (disabled)
+    if (jsonUnits != null) {
+      final units = <Unit>[];
+      for (var unit in jsonUnits) {
+        units.add(Unit.fromJson(unit));
+      }
+      setState(() {
+        _categories.removeLast();
+        _categories.add(Category(
+          name: apiCategory['name'],
+          units: units,
+          color: _baseColors.last,
+          iconLocation: _icons.last,
+        ));
+      });
+    }
+  }
 
   /// Function to call when a [Category] is tapped.
   void _onCategoryTap(Category category) {
@@ -193,7 +221,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
     );
     return Backdrop(
       currentCategory:
-          _currentCategory == null ? _defaultCategory : _currentCategory,
+      _currentCategory == null ? _defaultCategory : _currentCategory,
       frontPanel: _currentCategory == null
           ? UnitConverter(category: _defaultCategory)
           : UnitConverter(category: _currentCategory),

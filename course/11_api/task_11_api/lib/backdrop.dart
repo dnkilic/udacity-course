@@ -161,7 +161,7 @@ class _BackdropState extends State<Backdrop>
       setState(() {
         _controller.fling(
             velocity:
-                _backdropPanelVisible ? -_kFlingVelocity : _kFlingVelocity);
+            _backdropPanelVisible ? -_kFlingVelocity : _kFlingVelocity);
       });
     } else if (!_backdropPanelVisible) {
       setState(() {
@@ -216,7 +216,7 @@ class _BackdropState extends State<Backdrop>
     else
       _controller.fling(
           velocity:
-              _controller.value < 0.5 ? -_kFlingVelocity : _kFlingVelocity);
+          _controller.value < 0.5 ? -_kFlingVelocity : _kFlingVelocity);
   }
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
