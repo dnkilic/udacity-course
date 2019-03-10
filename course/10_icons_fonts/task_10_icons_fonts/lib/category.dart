@@ -14,8 +14,7 @@ class Category {
   final String name;
   final ColorSwatch color;
   final List<Unit> units;
-  // TODO: Change this to a String path to the image asset
-  final IconData iconLocation;
+  final String iconPath;
 
   /// Information about a [Category].
   ///
@@ -26,9 +25,9 @@ class Category {
     @required this.name,
     @required this.color,
     @required this.units,
-    @required this.iconLocation,
+    @required this.iconPath,
   })  : assert(name != null),
         assert(color != null),
         assert(units != null),
-        assert(iconLocation != null);
+        assert(iconPath != null);
 }
